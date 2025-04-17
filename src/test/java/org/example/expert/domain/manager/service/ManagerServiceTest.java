@@ -38,6 +38,11 @@ class ManagerServiceTest {
     @InjectMocks
     private ManagerService managerService;
 
+//    테스트 패키지 package org.example.expert.domain.manager.service; 의
+//    ManagerServiceTest 의 클래스에 있는 manager_목록_조회_시_Todo가_없다면_NPE_에러를_던진다()
+//    테스트가 성공하고 컨텍스트와 일치하도록 **테스트 코드와 테스트 코드 메서드 명을 수정**해 주세요.
+//    던지는 에러가 NullPointerException이 아니므로 메서드명 또한 수정되어야 해요!
+
     @Test
     public void manager_목록_조회_시_Todo가_없다면_NPE_에러를_던진다() {
         // given
@@ -45,7 +50,9 @@ class ManagerServiceTest {
         given(todoRepository.findById(todoId)).willReturn(Optional.empty());
 
         // when & then
-        InvalidRequestException exception = assertThrows(InvalidRequestException.class, () -> managerService.getManagers(todoId));
+//        InvalidRequestException exception = assertThrows(InvalidRequestException.class, () -> managerService.getManagers(todoId));
+        NullPointerException exception =
+                assertThrows(NullPointerException.class, () -> managerService.getManagers(todoId));
         assertEquals("Manager not found", exception.getMessage());
     }
 
