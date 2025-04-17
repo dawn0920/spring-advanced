@@ -1,5 +1,6 @@
 package org.example.expert.domain.user.service;
 
+import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 import org.example.expert.config.PasswordEncoder;
 import org.example.expert.domain.common.exception.InvalidRequestException;
@@ -25,11 +26,16 @@ public class UserService {
 
     @Transactional
     public void changePassword(long userId, UserChangePasswordRequest userChangePasswordRequest) {
-        if (userChangePasswordRequest.getNewPassword().length() < 8 ||
-                !userChangePasswordRequest.getNewPassword().matches(".*\\d.*") ||
-                !userChangePasswordRequest.getNewPassword().matches(".*[A-Z].*")) {
-            throw new InvalidRequestException("새 비밀번호는 8자 이상이어야 하고, 숫자와 대문자를 포함해야 합니다.");
-        }
+//        3. 코드 개선 퀴즈 - Validation (검증 - 입력값이 올바른지)
+//        패키지 package org.example.expert.domain.user.service; 의 UserService 클래스에 있는
+//        changePassword() 중 아래 코드 부분을 해당 API의 요청 DTO에서 처리할 수 있게 개선해주세요.
+//        'org.springframework.boot:spring-boot-starter-validation' 라이브러리를 활용해주세요!
+//        @NotNull, @NotBlank, @Email, @Size 같은 애너테이션 포함
+//        if (userChangePasswordRequest.getNewPassword().length() < 8 ||
+//                !userChangePasswordRequest.getNewPassword().matches(".*\\d.*") ||
+//                !userChangePasswordRequest.getNewPassword().matches(".*[A-Z].*")) {
+//            throw new InvalidRequestException("새 비밀번호는 8자 이상이어야 하고, 숫자와 대문자를 포함해야 합니다.");
+//        }
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new InvalidRequestException("User not found"));
