@@ -43,7 +43,9 @@ class CommentServiceTest {
         given(todoRepository.findById(anyLong())).willReturn(Optional.empty());
 
         // when
-        ServerException exception = assertThrows(ServerException.class, () -> {
+//        ServerException exception = assertThrows(ServerException.class, () -> {
+        // IllegalArgumentException (파라미터가 유효하지 않을때 사용함)
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
             commentService.saveComment(authUser, todoId, request);
         });
 
