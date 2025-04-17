@@ -35,9 +35,22 @@ public class ManagerService {
         Todo todo = todoRepository.findById(todoId)
                 .orElseThrow(() -> new InvalidRequestException("Todo not found"));
 
-        if (!ObjectUtils.nullSafeEquals(user.getId(), todo.getUser().getId())) {
+        // ObjectUtils.nullSafeEquals(a, b) - a와 b를 안전하게 비교
+//        ObjectUtils.nullSafeEquals(null, null) // true
+//        ObjectUtils.nullSafeEquals(1, null)    // false
+//        ObjectUtils.nullSafeEquals(1, 1)       // true
+//        ObjectUtils.nullSafeEquals(1, 2)       // false
+//        if (!ObjectUtils.nullSafeEquals(user.getId(), todo.getUser().getId())) {
+//            throw new InvalidRequestException("담당자를 등록하려고 하는 유저가 일정을 만든 유저가 유효하지 않습니다.");
+//        }
+        // todo.getUser() 가 null인데 null 체크 없이 id를 호출하고 있어서 NullPointerException 문제 발생 <왜 문제가 발생하는것인가?>
+        // -> todo.getUser()가 null인데 왜 에러가 발생할까? -> null.getId()를 호출한 것이기 때문에 NullPointerException
+        // -> 즉 이 줄에서 아예 코드가 멈춰서 InvalidRequestException 가 발생할 기회도 오지 않음.
+        // 그렇기 때문에 null 체크를 먼저 하면 null일 경우 바로 throw로 던져지기 때문에 if문 내부로 들어가게 된다.
+        if (todo.getUser() == null | !ObjectUtils.nullSafeEquals(user.getId(), todo.getUser().getId())) {
             throw new InvalidRequestException("담당자를 등록하려고 하는 유저가 일정을 만든 유저가 유효하지 않습니다.");
         }
+
 
         User managerUser = userRepository.findById(managerSaveRequest.getManagerUserId())
                 .orElseThrow(() -> new InvalidRequestException("등록하려고 하는 담당자 유저가 존재하지 않습니다."));
