@@ -17,6 +17,12 @@ public class PasswordEncoder {
     }
 
     public boolean matches(String rawPassword, String encodedPassword) {
+        // rawPassword.toCharArray() - 평문 비밀번호를 charp[]로 변환
+        // BCrypt.verifyer().verify(···) - 검증 메서드
+        // encodedPassword 복호화 하지 않고 -> rawPassword를 같은 조건으로 해싱 -> 두 해시 값이 같은지 반환
+        // 복호화 (암호문을 평문으로 되돌림), 해싱(암호화된 문자열로 변환-복호화 불가능), 암호회(암호를 변환 후 복호화 가능)
+        //
+        // result.verified -> true(비밀번호 일치), false(비밀번호 일치X)
         BCrypt.Result result = BCrypt.verifyer().verify(rawPassword.toCharArray(), encodedPassword);
         return result.verified;
     }
