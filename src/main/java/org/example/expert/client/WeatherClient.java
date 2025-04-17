@@ -27,13 +27,24 @@ public class WeatherClient {
                 restTemplate.getForEntity(buildWeatherApiUri(), WeatherDto[].class);
 
         WeatherDto[] weatherArray = responseEntity.getBody();
+//        2. 리팩토링 퀴즈 - 불필요한 if-else 피하기
+//        패키지 package org.example.expert.client; 의 WeatherClient 클래스에 있는
+//        getTodayWeather() 중 아래의 코드 부분을 리팩토링해주세요.
+//        if (!HttpStatus.OK.equals(responseEntity.getStatusCode())) {
+//            throw new ServerException("날씨 데이터를 가져오는데 실패했습니다. 상태 코드: " + responseEntity.getStatusCode());
+//        } else {
+//            if (weatherArray == null || weatherArray.length == 0) {
+//                throw new ServerException("날씨 데이터가 없습니다.");
+//            }
+//        }
+
         if (!HttpStatus.OK.equals(responseEntity.getStatusCode())) {
             throw new ServerException("날씨 데이터를 가져오는데 실패했습니다. 상태 코드: " + responseEntity.getStatusCode());
-        } else {
-            if (weatherArray == null || weatherArray.length == 0) {
-                throw new ServerException("날씨 데이터가 없습니다.");
-            }
         }
+        if (weatherArray == null || weatherArray.length == 0) {
+            throw new ServerException("날씨 데이터가 없습니다.");
+        }
+
 
         String today = getCurrentDate();
 
