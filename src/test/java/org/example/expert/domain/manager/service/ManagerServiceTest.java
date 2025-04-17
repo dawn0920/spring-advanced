@@ -56,6 +56,9 @@ class ManagerServiceTest {
         assertEquals("Manager not found", exception.getMessage());
     }
 
+//    테스트 패키지 org.example.expert.domain.manager.service의
+//    ManagerServiceTest 클래스에 있는 todo의_user가_null인_경우_예외가_발생한다()
+//    테스트가 성공할 수 있도록 **서비스 로직**을 수정해 주세요.
     @Test
     void todo의_user가_null인_경우_예외가_발생한다() {
         // given
@@ -64,13 +67,18 @@ class ManagerServiceTest {
         long managerUserId = 2L;
 
         Todo todo = new Todo();
+        // ReflectionTestUtils - 테스트 코드에서 접근 불가능한 private 필드나 메서드에 접근
+        // setField(1, 2, 3) - 1(값을 넣을 객체 인스턴스), 2(값을 넣고 싶은 필드 이름), 3(넣고 싶은 값)
         ReflectionTestUtils.setField(todo, "user", null);
 
         ManagerSaveRequest managerSaveRequest = new ManagerSaveRequest(managerUserId);
 
+        // todoRepository(mock 객체) - 행동정의(시뮬레이션)
         given(todoRepository.findById(todoId)).willReturn(Optional.of(todo));
 
         // when & then
+        // NullPointerException - null인 객체에 접근할 때 발생
+        // InvalidRequestException - 커스텀 예외 (비즈니스 로직상 잘못된 요청 - user 문제)
         InvalidRequestException exception = assertThrows(InvalidRequestException.class, () ->
             managerService.saveManager(authUser, todoId, managerSaveRequest)
         );
