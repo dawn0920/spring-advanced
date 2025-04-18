@@ -74,6 +74,11 @@ class ManagerServiceTest {
         ManagerSaveRequest managerSaveRequest = new ManagerSaveRequest(managerUserId);
 
         // todoRepository(mock 객체) - 행동정의(시뮬레이션)
+        // 내부적으로 when으로 작동
+//        given(...) → "이런 상황이 벌어지면"
+//        willReturn(...) → "이 값을 리턴해줘"
+//        Optional.of(todo) - 절대 null이 아니라고 확신할때 사용
+//        Optional.ofNullable(todo) - null일 수도 있을 때 사용
         given(todoRepository.findById(todoId)).willReturn(Optional.of(todo));
 
         // when & then
