@@ -43,7 +43,11 @@ public class AuthInterceptor implements HandlerInterceptor {
                            HttpServletResponse response,
                            Object handler) throws Exception {
         // 클라이언트에서 HTTP 요청을 보낼 때 Header에 UserRole 라는 값을 보냈을때 그 안에 있는 값을 변수에 저장
-        String userRole = request.getHeader("UserRole");
+//        String userRole = request.getHeader("UserRole"); !! JWT 필터에서는 getHeader 불가능
+        // Header는 읽기 전용이기 때문에 필터나 인터셉터에서 request.setHeader(...)로 새로 추가할 수 없음.
+        //그래서 필터 → 인터셉터 → 컨트롤러로 정보 넘길 땐 request.setAttribute() / getAttribute() 조합을 써야 함.
+
+        String userRole = (String) request.getAttribute("userRole");
 
         // setStatus() -> 응답 코드를 설정하는 메서드
         // SC_UNAUTHORIZED -> 인증이 안됨 (상태코드 401 -> 로그인 필요)
@@ -61,6 +65,7 @@ public class AuthInterceptor implements HandlerInterceptor {
             response.getWriter().write("접근 권한 없음."); // 에러 메세지 응답
             return false; // 컨트롤러 실행 X
         }
+
 
         System.out.println("[ADMIN LOG]" +
                     "\n[Local Time]" + LocalDateTime.now() +

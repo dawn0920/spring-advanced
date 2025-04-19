@@ -47,7 +47,8 @@ public class AdminApiLoggingAspect {
         // 쓰레드 - 요청마다 따로 처리되는 것 / 바인딩 - 그 요청을 연결함
         // (ServletRequestAttributes) - 서블릿 기반의 요청 정보로 다운캐스팅
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-        String userId = request.getHeader("UserId");
+//        String userId = request.getHeader("UserId");
+        Long userId = (Long) request.getAttribute("userId");
 
         // 2. API 요청 시각
         String time = LocalDateTime.now().toString();
@@ -77,7 +78,7 @@ public class AdminApiLoggingAspect {
         // 5. 응답 본문(ResponseBody)
         String responseBody = objectMapper.writeValueAsString(result);
 
-        log.info("요청한 사용자의 ID : {}\n " +
+        log.info("\n요청한 사용자의 ID : {}\n " +
                 "API 요청 시각 : {}\n" +
                 "API 요청 URL : {}\n" +
                 "요청 본문(RequestBody) : {}\n" +
