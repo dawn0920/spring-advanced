@@ -62,8 +62,9 @@ public class AuthInterceptor implements HandlerInterceptor {
             return false; // 컨트롤러 실행 X
         }
 
-        System.out.println("[ADMIN LOG]" + LocalDateTime.now() +
-                    " - " + request.getMethod() + " " + request.getRequestURI());
+        System.out.println("[ADMIN LOG]" +
+                    "\n[Local Time]" + LocalDateTime.now() +
+                    "\n[Request URI]" + request.getMethod() + " " + request.getRequestURI());
         // 해당문구를 log 형식으로 출력하는 방식에 대해서 생각해볼것
 
         return true; // 통과
