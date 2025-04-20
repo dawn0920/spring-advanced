@@ -12,6 +12,8 @@ import org.example.expert.domain.todo.entity.Todo;
 import org.example.expert.domain.todo.repository.TodoRepository;
 import org.example.expert.domain.user.dto.response.UserResponse;
 import org.example.expert.domain.user.entity.User;
+import org.example.expert.exception.CustomException;
+import org.example.expert.exception.ExceptionCode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,7 +31,8 @@ public class CommentService {
     public CommentSaveResponse saveComment(AuthUser authUser, long todoId, CommentSaveRequest commentSaveRequest) {
         User user = User.fromAuthUser(authUser);
         Todo todo = todoRepository.findById(todoId).orElseThrow(() ->
-                new InvalidRequestException("Todo not found"));
+//                new InvalidRequestException("Todo not found"));
+                new CustomException(ExceptionCode.TODO_NOT_FOUND));
 
         Comment newComment = new Comment(
                 commentSaveRequest.getContents(),

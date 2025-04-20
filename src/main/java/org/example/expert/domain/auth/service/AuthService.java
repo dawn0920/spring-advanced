@@ -12,6 +12,9 @@ import org.example.expert.domain.common.exception.InvalidRequestException;
 import org.example.expert.domain.user.entity.User;
 import org.example.expert.domain.user.enums.UserRole;
 import org.example.expert.domain.user.repository.UserRepository;
+import org.example.expert.exception.CustomException;
+import org.example.expert.exception.ErrorCode;
+import org.example.expert.exception.ExceptionCode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,7 +56,8 @@ public class AuthService {
 //             return new SignupResponse(bearerToken);
 //             일반적으로 throw로 예외를 던지면 그 아래에 있는 값들은 모두 실행이 되지 않음
 //             그렇기 때문에 코드를 아래로 바꾸면 불필요하게 일어나지 않음
-            throw new InvalidRequestException("이미 존재하는 이메일입니다.");
+//            throw new InvalidRequestException("이미 존재하는 이메일입니다.");
+            throw new CustomException(ExceptionCode.EMAIL_ALREADY_EXISTS);
         }
 
         String encodedPassword = passwordEncoder.encode(signupRequest.getPassword());
@@ -73,11 +77,13 @@ public class AuthService {
     @Transactional(readOnly = true)
     public SigninResponse signin(SigninRequest signinRequest) {
         User user = userRepository.findByEmail(signinRequest.getEmail()).orElseThrow(
-                () -> new InvalidRequestException("가입되지 않은 유저입니다."));
+//                () -> new InvalidRequestException("가입되지 않은 유저입니다."));
+                () -> new CustomException(ExceptionCode.ACCOUNT_NOT_FOUND));
 
         // 로그인 시 이메일과 비밀번호가 일치하지 않을 경우 401을 반환합니다.
         if (!passwordEncoder.matches(signinRequest.getPassword(), user.getPassword())) {
-            throw new AuthException("잘못된 비밀번호입니다.");
+//            throw new AuthException("잘못된 비밀번호입니다.");
+            throw new CustomException(ExceptionCode.PASSWORD_MISMATCH);
         }
 
         String bearerToken = jwtUtil.createToken(user.getId(), user.getEmail(), user.getUserRole());

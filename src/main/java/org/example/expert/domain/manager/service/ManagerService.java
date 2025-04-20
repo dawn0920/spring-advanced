@@ -13,6 +13,8 @@ import org.example.expert.domain.todo.repository.TodoRepository;
 import org.example.expert.domain.user.dto.response.UserResponse;
 import org.example.expert.domain.user.entity.User;
 import org.example.expert.domain.user.repository.UserRepository;
+import org.example.expert.exception.CustomException;
+import org.example.expert.exception.ExceptionCode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
@@ -33,7 +35,8 @@ public class ManagerService {
         // 일정을 만든 유저
         User user = User.fromAuthUser(authUser);
         Todo todo = todoRepository.findById(todoId)
-                .orElseThrow(() -> new InvalidRequestException("Todo not found"));
+//                .orElseThrow(() -> new InvalidRequestException("Todo not found"));
+                .orElseThrow(() -> new CustomException(ExceptionCode.TODO_NOT_FOUND));
 
         // ObjectUtils.nullSafeEquals(a, b) - a와 b를 안전하게 비교
 //        ObjectUtils.nullSafeEquals(null, null) // true
@@ -71,7 +74,8 @@ public class ManagerService {
     @Transactional(readOnly = true)
     public List<ManagerResponse> getManagers(long todoId) {
         Todo todo = todoRepository.findById(todoId)
-                .orElseThrow(() -> new InvalidRequestException("Todo not found"));
+//                .orElseThrow(() -> new InvalidRequestException("Todo not found"));
+                .orElseThrow(() -> new CustomException(ExceptionCode.TODO_NOT_FOUND));
 
         List<Manager> managerList = managerRepository.findByTodoIdWithUser(todo.getId());
 
@@ -89,17 +93,20 @@ public class ManagerService {
     @Transactional
     public void deleteManager(long userId, long todoId, long managerId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new InvalidRequestException("User not found"));
+//                .orElseThrow(() -> new InvalidRequestException("User not found"));
+                .orElseThrow(() -> new CustomException(ExceptionCode.USER_NOT_FOUND));
 
         Todo todo = todoRepository.findById(todoId)
-                .orElseThrow(() -> new InvalidRequestException("Todo not found"));
+//                .orElseThrow(() -> new InvalidRequestException("Todo not found"));
+                .orElseThrow(() -> new CustomException(ExceptionCode.TODO_NOT_FOUND));
 
         if (todo.getUser() == null || !ObjectUtils.nullSafeEquals(user.getId(), todo.getUser().getId())) {
             throw new InvalidRequestException("해당 일정을 만든 유저가 유효하지 않습니다.");
         }
 
         Manager manager = managerRepository.findById(managerId)
-                .orElseThrow(() -> new InvalidRequestException("Manager not found"));
+//                .orElseThrow(() -> new InvalidRequestException("Manager not found"));
+                .orElseThrow(() -> new CustomException(ExceptionCode.MANAGER_NOT_FOUND));
 
         if (!ObjectUtils.nullSafeEquals(todo.getId(), manager.getTodo().getId())) {
             throw new InvalidRequestException("해당 일정에 등록된 담당자가 아닙니다.");
