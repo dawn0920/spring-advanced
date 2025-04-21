@@ -50,7 +50,7 @@ public class ManagerService {
         // -> todo.getUser()가 null인데 왜 에러가 발생할까? -> null.getId()를 호출한 것이기 때문에 NullPointerException
         // -> 즉 이 줄에서 아예 코드가 멈춰서 InvalidRequestException 가 발생할 기회도 오지 않음.
         // 그렇기 때문에 null 체크를 먼저 하면 null일 경우 바로 throw로 던져지기 때문에 if문 내부로 들어가게 된다.
-        if (todo.getUser() == null | !ObjectUtils.nullSafeEquals(user.getId(), todo.getUser().getId())) {
+        if (todo.getUser() == null || !ObjectUtils.nullSafeEquals(user.getId(), todo.getUser().getId())) {
             throw new InvalidRequestException("담당자를 등록하려고 하는 유저가 일정을 만든 유저가 유효하지 않습니다.");
         }
 

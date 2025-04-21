@@ -10,6 +10,8 @@ import org.example.expert.domain.todo.entity.Todo;
 import org.example.expert.domain.todo.repository.TodoRepository;
 import org.example.expert.domain.user.entity.User;
 import org.example.expert.domain.user.enums.UserRole;
+import org.example.expert.exception.CustomException;
+import org.example.expert.exception.ExceptionCode;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -45,12 +47,16 @@ class CommentServiceTest {
         // when
 //        ServerException exception = assertThrows(ServerException.class, () -> {
         // IllegalArgumentException (파라미터가 유효하지 않을때 사용함)
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+//        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+//            commentService.saveComment(authUser, todoId, request);
+//        });
+
+        CustomException exception = assertThrows(CustomException.class, () -> {
             commentService.saveComment(authUser, todoId, request);
         });
 
         // then
-        assertEquals("Todo not found", exception.getMessage());
+        assertEquals(ExceptionCode.TODO_NOT_FOUND, exception.getExceptionCode());
     }
 
     @Test

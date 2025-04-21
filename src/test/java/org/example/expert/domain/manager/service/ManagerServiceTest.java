@@ -12,6 +12,8 @@ import org.example.expert.domain.todo.repository.TodoRepository;
 import org.example.expert.domain.user.entity.User;
 import org.example.expert.domain.user.enums.UserRole;
 import org.example.expert.domain.user.repository.UserRepository;
+import org.example.expert.exception.CustomException;
+import org.example.expert.exception.ExceptionCode;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -51,9 +53,11 @@ class ManagerServiceTest {
 
         // when & then
 //        InvalidRequestException exception = assertThrows(InvalidRequestException.class, () -> managerService.getManagers(todoId));
-        NullPointerException exception =
-                assertThrows(NullPointerException.class, () -> managerService.getManagers(todoId));
-        assertEquals("Manager not found", exception.getMessage());
+//        NullPointerException exception =
+//                assertThrows(NullPointerException.class, () -> managerService.getManagers(todoId));
+//        assertEquals("Manager not found", exception.getMessage());
+        CustomException exception = assertThrows(CustomException.class, () -> managerService.getManagers(todoId));
+        assertEquals(ExceptionCode.TODO_NOT_FOUND, exception.getExceptionCode());
     }
 
 //    테스트 패키지 org.example.expert.domain.manager.service의
